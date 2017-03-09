@@ -2,44 +2,37 @@ import React, { Component } from 'react';
 import List from './List';
 
 class Lists extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
     }
     render() {
+        const {
+            diary,
+            editing,
+            weekday,
+            getdate
+        } = this.props;
+        let count = 0;
+        const diaryList = diary.map(({id, text, done})=> {
+            const week = ()=> weekday[this.props.getdate.getDay()-1+count++];
+            const getday = ()=> getdate.getDate()+count;
+
+            return (
+                <List
+                    key={id}
+                    text={text}
+                    done={done}
+                    editing={editing === id}
+                    week={()=> week()}
+                    getday={()=> getday()}
+                    diary={diary}
+                />
+            )
+        });
+
         return (
             <ul className="diaryLists">
-                {/*<List />*/}
-                <li className="diaryList">
-                    <div className="dates">
-                        <span className="day">WED</span>
-                        <span className="date">9</span>
-                    </div>
-                    <span className="lineText">
-                        2017년 3월 9일 수요일 날씨 맑음 React와 handlebars를 이용해서 한줄 일기를 만들어봤음
-                        2017년 3월 9일 수요일 날씨 맑음 React와 handlebars를 이용해서 한줄 일기를 만들어봤음
-                    </span>
-                </li>
-                <li className="diaryList">
-                    <div className="dates">
-                        <span className="day">WED</span>
-                        <span className="date">9</span>
-                    </div>
-                    <span className="lineText">
-                        2017년 3월 9일 수요일 날씨 맑음 React와 handlebars를 이용해서 한줄 일기를 만들어봤음
-                        2017년 3월 9일 수요일 날씨 맑음 React와 handlebars를 이용해서 한줄 일기를 만들어봤음
-                    </span>
-                </li>
-                <li className="diaryList">
-                    <div className="dates">
-                        <span className="day">WED</span>
-                        <span className="date">9</span>
-                    </div>
-                    <span className="lineText">
-                        2017년 3월 9일 수요일 날씨 맑음 React와 handlebars를 이용해서 한줄 일기를 만들어봤음
-                        2017년 3월 9일 수요일 날씨 맑음 React와 handlebars를 이용해서 한줄 일기를 만들어봤음
-                    </span>
-                    <button className="closeBtn"></button>
-                </li>
+                {diaryList}
             </ul>
         )
     }
