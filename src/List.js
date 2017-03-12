@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import ClassNames from 'classnames';
 
-let status = null;
-
 class List extends Component {
     constructor(props) {
         super(props);
@@ -50,8 +48,7 @@ class List extends Component {
                     <Link
                         to="/Write"
                         className={ClassNames('writeText', {
-                            'selected': filter === 'Write',
-                            status: status
+                            'selected': filter === 'Write'
                         })}
                     >
                         {text}

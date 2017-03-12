@@ -13,9 +13,6 @@ class Write extends Component {
         this.props.handleWriteSave(val);
     }
     render() {
-        const {
-            diary
-        } = this.props;
         const today = new Date();
         const weekday = ["SUN", "MON", "TUS", "WEN", "THR", "FRI", "SAT"];
         const month = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
