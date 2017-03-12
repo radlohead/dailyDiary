@@ -1,35 +1,66 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
+import ClassNames from 'classnames';
+
+let status = null;
 
 class List extends Component {
     constructor(props) {
         super(props);
     }
-    componentDidUpdate(){
-        // this._lineText.value = this.props.diary[0].text;
+    componentDidMount(){
+        const text = this._writeText.innerHTML;
+        const writeTextChild = this._writeText.childNodes[0];
+        if(text.length > 78) return;
+        writeTextChild.style.marginTop = 10+'px';
+        writeTextChild.style.fontSize = 16+'px';
     }
     render() {
         const {
-            diary,
             text,
-            done,
-            editing
+            id,
+            weekday,
+            week,
+            writing,
+            filter,
+            handleWriting,
+            handleWriteDelete
         } = this.props;
 
+        const oneId = id.substr(id.length - 1, 1);
+        const twoId = id.substr(id.length - 2, 2);
+        const day = id.substr(id.length-2, 1) === "0" ? oneId : twoId;
+        const dayWeek = weekday[week];
+
         return (
-            <li className="diaryList">
+            <li className={ClassNames('diaryList', {
+                writing: writing
+            })}>
                 <div className="dates">
-                    <span className="day">{this.props.week()}</span>
-                    <span className="date">{this.props.getday()}</span>
+                    <span className="day">{dayWeek}</span>
+                    <span className={ClassNames('date', {
+                        holiday: dayWeek === 'SAT' || dayWeek === 'SUN'
+                    })}>{day}</span>
                 </div>
-                <div className="diary-view__text">
-                    {text}
+                <div
+                    className="diary-view__text"
+                    onClick={handleWriting}
+                    ref={ref=> {this._writeText = ref; }}
+                >
+                    <Link
+                        to="/Write"
+                        className={ClassNames('writeText', {
+                            'selected': filter === 'Write',
+                            status: status
+                        })}
+                    >
+                        {text}
+                    </Link>
                 </div>
-                <input
-                    className="lineText"
-                    type="text"
-                    ref={ref=> { this._lineText = ref; }}
+                <button
+                    className="closeBtn"
+                    onClick={handleWriteDelete}
                 />
-                <button className="closeBtn"></button>
             </li>
         )
     }

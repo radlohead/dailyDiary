@@ -8,26 +8,30 @@ class Lists extends Component {
     render() {
         const {
             diary,
-            editing,
+            writing,
             weekday,
-            getdate
+            today,
+            filter,
+            handleWriting,
+            handleWriteDelete
         } = this.props;
-        let count = 0;
-        const diaryList = diary.map(({id, text, done})=> {
-            const week = ()=> weekday[this.props.getdate.getDay()-1+count++];
-            const getday = ()=> getdate.getDate()+count;
 
+        const diaryList = diary.map(({id, text, week}) => {
             return (
                 <List
                     key={id}
                     text={text}
-                    done={done}
-                    editing={editing === id}
-                    week={()=> week()}
-                    getday={()=> getday()}
+                    weekday={weekday}
+                    id={id}
                     diary={diary}
+                    today={today}
+                    week={week}
+                    writing={writing === id}
+                    filter={filter}
+                    handleWriting={()=> handleWriting(id ,text)}
+                    handleWriteDelete={()=> handleWriteDelete(id)}
                 />
-            )
+            );
         });
 
         return (

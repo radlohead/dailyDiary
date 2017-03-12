@@ -85,6 +85,9 @@ li.diaryList{
             padding-top: 5px;
             font-size: 18px;
         }
+        .holiday{
+            color: red;
+        }
     }
     .diary-view__text{
         position: relative;
@@ -94,10 +97,18 @@ li.diaryList{
         border: solid 1px #666;
         line-height: 20px;
         overflow: hidden;
-        text-overflow: ellipsis;
-        -webkit-line-clamp: 2; /* 라인수 */
-        -webkit-box-orient: vertical;
-        word-wrap:break-word;
+        a{
+            display: block;
+            color: #000;
+        }
+        a.writeText{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* 라인수 */
+            -webkit-box-orient: vertical;
+            word-wrap:break-word;
+        }
      }
     .lineText{
         display: none;
@@ -126,6 +137,35 @@ li.diaryList{
     &:after{
         clear: both;
         content: '';
+    }
+}
+
+.write{
+    header.header{
+        h1{
+            margin: 10px 0;
+            font-size: 18px;
+            span{
+                margin: 0 10px;
+                &:first-child{
+                    margin-left: 0;
+                }
+                &:last-child{
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+    textarea.writeText{
+        display: block;
+        width: 500px;
+        height: 300px;
+        font-size: 14px;
+    }
+    button.writeBtn{
+        float: right;
+        margin-top: 10px;
+        font-size: 14px;
     }
 }
 

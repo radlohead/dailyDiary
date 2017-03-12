@@ -1,55 +1,110 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Lists from './Lists';
+import Write from './Write';
 import Footer from './Footer';
-
-const newId = () => Date.now();
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            diary: [
-                {"id": 1000, "text": "하루 한줄 일기"},
-                {"id": 1001, "text": "추가를 누르면 일기를 쓰실 수 있습니다."},
-                {"id": 1002, "text": "매일매일 일기를 써보세요"}
-            ],
-            editing: null
+            diary: [],
+            writing: null,
+            today: new Date(),
+            saveText: null,
+            YMD: new Date().getFullYear()+''+ (new Date().getMonth()+1) +''+ new Date().getDate()
         }
     }
     componentWillMount(){
-        // axios.get('./data.json')
-        //     .then(response => {
-        //         this.setState({ diary: response.data.diary });
-        //     });
+        axios.get('./data.json')
+            .then(response => {
+                this.setState({ diary: response.data.diary });
+            });
     }
     handleAddList(){
-        this.setState([...this.state.diary, {
-            id: newId,
-            text: ''
-        }])
+        const diary = [...this.state.diary];
+        if(diary.length >= 1){
+            if(diary[diary.length-1].id === this.state.YMD) return alert('일기는 하루에 하나만 쓸수 있습니다.');
+        }
+        this.setState({
+            diary:[...this.state.diary, {
+                id: this.state.YMD,
+                week: this.state.today.getDay(),
+                text: '일기를 쓰시려면 이곳을 클릭해 주세요'
+            }]
+        });
+    }
+    handleWriting(id, text){
+        this.setState({
+            writing: id,
+            saveText: text
+        });
+    }
+    handleWriteSave(newText){
+        const id = this.state.writing;
+        const diary = [...this.state.diary];
+        const SaveIndex = diary.findIndex(v=> v.id === id);
+        diary[SaveIndex].text = newText;
+        this.setState({
+            diary: diary
+        });
+    }
+    handleWriteDelete(id){
+        const diary = [...this.state.diary];
+        const deleteIndex = diary.findIndex(v=> v.id === id);
+        diary.splice(deleteIndex, 1);
+        this.setState({
+            diary: diary
+        });
     }
     render() {
         const {
             diary,
-            editing
+            writing,
+            today,
+            saveText
         } = this.state;
-        let getdate = new Date();
-        const weekday = ["MON", "TUS", "WEN", "THR", "FRI", "SAT", "SUN"];
+        const weekday = ["SUN", "MON", "TUS", "WEN", "THR", "FRI", "SAT"];
         const filter = this.props.routeParams.filter;
-
-        return (
-            <div className="wrap">
+        const lists = () => {
+            if(filter === 'Write') return;
+            return (
                 <Lists
-                    getdate={getdate}
+                    today={today}
                     weekday={weekday}
                     diary={diary}
                     filter={filter}
-                    editing={editing}
+                    writing={writing}
+                    handleWriting={(id, text)=> this.handleWriting(id, text)}
+                    handleWriteDelete={(id)=> this.handleWriteDelete(id)}
                 />
+            );
+        };
+        const footer = () => {
+            if(filter === 'Write') return;
+            return (
                 <Footer
+                    filter={filter}
                     handleAddList={()=> this.handleAddList()}
                 />
+            );
+        };
+        const write = () => {
+            if(filter !== 'Write') return;
+            return (
+                <Write
+                    diary={diary}
+                    saveText={saveText}
+                    handleWriteSave={(v)=> this.handleWriteSave(v)}
+                />
+            )
+        };
+
+        return (
+            <div className="wrap">
+                {lists()}
+                {write()}
+                {footer()}
             </div>
         )
     }
